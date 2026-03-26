@@ -27,7 +27,7 @@ class WhoAmI extends Component {
         const { name, surname, link } = this.props;
         const { years, position } = this.state;
         return (
-            <div>
+            <>
                 <h1>
                     My name is {name()}, surname - {surname.lastName}, age -{" "}
                     {years}, position - {position}
@@ -39,7 +39,7 @@ class WhoAmI extends Component {
                     <span>Введите должность</span>
                     <input type="text" onChange={this.commitInputChanges} />
                 </form>
-            </div>
+            </>
         );
     }
 }
