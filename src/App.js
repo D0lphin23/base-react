@@ -1,5 +1,6 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import styled from "styled-components";
+import BootstrapTest from "./BootstrapTest";
 
 import "./App.css";
 
@@ -11,7 +12,7 @@ const EmpItem = styled.div`
     a {
         display: block;
         margin: 10px 0;
-        color: ${props => props.active ? "orange" : "black"};
+        color: ${(props) => (props.active ? "orange" : "black")};
     }
     input {
         display: block;
@@ -79,9 +80,49 @@ const Wrapper = styled.div`
     margin: 80px auto 0 auto;
 `;
 
+const DynamicGreating = (props) => {
+    return (
+        <div className={`mb-3 p-3 border border-${props.color}`}>
+            {React.Children.map(props.children, (child) => {
+                return React.cloneElement(child, {
+                    className: "shadow p-3 m-3 border rounded",
+                });
+            })}
+        </div>
+    );
+};
+
 function App() {
     return (
         <Wrapper>
+            <BootstrapTest
+                left={
+                    <DynamicGreating color={"primary"}>
+                        <h2>Совершенно не важно что тут написано</h2>
+                        <h2>Здесь просто контент</h2>
+                    </DynamicGreating>
+                }
+                right={
+                    <DynamicGreating color={"success"}>
+                        <h2>Здесь будет что-то другое</h2>
+                    </DynamicGreating>
+                }
+            />
+
+            <WhoAmI
+                name={() => {
+                    return "Egor";
+                }}
+                surname={{ lastName: "Gorelik" }}
+                link="facebook.com"
+            />
+            <WhoAmI
+                name={() => {
+                    return "Egor";
+                }}
+                surname={{ lastName: "Gorelik" }}
+                link="facebook.com"
+            />
             <WhoAmI
                 name={() => {
                     return "Egor";
