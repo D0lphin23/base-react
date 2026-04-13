@@ -1,29 +1,31 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { Container } from "react-bootstrap";
 import "./App.css";
 
 class Form extends Component {
-    // myRef = React.createRef();
-
-    // componentDidMount() {
-    //     this.myRef.current.focus();
-    // }
-
-    setInputRef = (el) => {
-        this.myRef = el;
+    state = {
+        advOpen: false,
     };
 
-    focusFirstInput = () => {
-        if (this.myRef) {
-            // this.myRef.current.focus();
-            this.myRef.focus();
-        }
+    componentDidMount() {
+        setTimeout(this.hendlerClick, 3000);
+    }
+
+    hendlerClick = () => {
+        this.setState(({ advOpen }) => ({
+            advOpen: !advOpen,
+        }));
     };
 
     render() {
         return (
             <Container>
-                <form className="w-50 border mt-5 p-3 m-auto">
+                <form
+                    onClick={this.hendlerClick}
+                    className="w-50 border mt-5 p-3 m-auto"
+                    style={{ overflow: "hidden", position: "relative" }}
+                >
                     <div className="mb-3">
                         <label
                             htmlFor="exampleFormControlInput1"
@@ -32,8 +34,6 @@ class Form extends Component {
                             Email address
                         </label>
                         <input
-                            // ref={this.myRef}
-                            ref={this.setInputRef}
                             type="email"
                             className="form-control"
                             id="exampleFormControlInput1"
@@ -48,17 +48,45 @@ class Form extends Component {
                             Example textarea
                         </label>
                         <textarea
-                            onClick={this.focusFirstInput}
                             className="form-control"
                             id="exampleFormControlTextarea1"
                             rows="3"
                         ></textarea>
                     </div>
+                    {this.state.advOpen ? (
+                        <Portal>
+                            <Msg />
+                        </Portal>
+                    ) : null}
                 </form>
             </Container>
         );
     }
 }
+
+const Portal = (props) => {
+    const node = document.createElement("div");
+    document.body.append(node);
+
+    return ReactDOM.createPortal(props.children, node);
+};
+
+const Msg = () => {
+    return (
+        <div
+            style={{
+                width: "500px",
+                height: "150px",
+                backgroundColor: "red",
+                position: "absolute",
+                right: "0",
+                bottom: "0",
+            }}
+        >
+            Hello
+        </div>
+    );
+};
 
 function App() {
     return <Form />;
