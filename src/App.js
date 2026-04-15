@@ -1,30 +1,48 @@
-import React, { Component, useRef } from "react";
+import { useState, useEffect, use } from "react";
 import { Container } from "react-bootstrap";
 import "./App.css";
 
-const Form = () => {
-    const myRef = useRef(null);
+const useInputWithValidation = (initialValue) => {
+    const [value, setValue] = useState(initialValue);
 
-    const focusFirstInput = () => {
-        if (myRef) {
-            myRef.current.focus();
-        }
+    const onChange = (e) => {
+        setValue(e.target.value);
     };
+
+    const validateText = () => {
+        return value.search(/\d/) >= 0;
+    };
+
+    return { value, onChange, validateText };
+};
+
+const Form = () => {
+    const input = useInputWithValidation("");
+    const textArea = useInputWithValidation("");
+
+    const color = input.validateText() ? "text-danger" : null;
 
     return (
         <Container>
             <form className="w-50 border mt-5 p-3 m-auto">
                 <div className="mb-3">
+                    <input
+                        value={`${input.value} / ${textArea.value}`}
+                        type="text"
+                        className="form-control"
+                        readOnly
+                    />
                     <label
                         htmlFor="exampleFormControlInput1"
-                        className="form-label"
+                        className="form-label mt-3"
                     >
                         Email address
                     </label>
                     <input
-                        ref={myRef}
+                        onChange={input.onChange}
                         type="email"
-                        className="form-control"
+                        value={input.value}
+                        className={`form-control ${color}`}
                         id="exampleFormControlInput1"
                         placeholder="name@example.com"
                     />
@@ -37,7 +55,8 @@ const Form = () => {
                         Example textarea
                     </label>
                     <textarea
-                        onClick={focusFirstInput}
+                        onChange={textArea.onChange}
+                        value={textArea.value}
                         className="form-control"
                         id="exampleFormControlTextarea1"
                         rows="3"
